@@ -213,24 +213,26 @@ async function handleMessage(senderPsid, receivedMessage) {
 
   const profile = await getProfileInfoAPI(senderPsid);
 
-  if (receivedMessage.nlp) {
-    const intents = receivedMessage.nlp.intents;
-    const entities = receivedMessage.nlp.entities;
-    const traits = receivedMessage.nlp.traits;
-    const nlpInfo = determineIntent(intents, entities);
-
-    response = await handleIntent(nlpInfo)
-
-    console.log(JSON.stringify(nlpInfo));
-
-    callSendAPI(senderPsid, response);
-    return;
-  } else if (receivedMessage.text) { // Checks if the message contains text but does not contain NLP
-    // Create the payload for a basic text message, which
-    // will be added to the body of your request to the Send API
-    response = {
-      'text': `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`
-    };
+  // Checks if the message contains text 
+  if (receivedMessage.text) { 
+    if (receivedMessage.nlp) {
+      const intents = receivedMessage.nlp.intents;
+      const entities = receivedMessage.nlp.entities;
+      const traits = receivedMessage.nlp.traits;
+      const nlpInfo = determineIntent(intents, entities);
+  
+      response = await handleIntent(nlpInfo)
+  
+      console.log(JSON.stringify(nlpInfo));
+  
+      callSendAPI(senderPsid, response);
+    } else {
+      // Create the payload for a basic text message, which
+      // will be added to the body of your request to the Send API
+      response = {
+        'text': `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`
+      };
+    }
   } else if (receivedMessage.attachments) {
 
     // Get the URL of the message attachment
