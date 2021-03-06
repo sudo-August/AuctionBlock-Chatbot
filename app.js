@@ -78,6 +78,7 @@ app.post('/webhook', (req, res) => {
       // Check if the event is a message or postback and
       // pass the event to the appropriate handler function
       if (webhookEvent.message) {
+        console.log(webhookEvent.message)
         handleMessage(senderPsid, webhookEvent.message);
       } else if (webhookEvent.postback) {
         handlePostback(senderPsid, webhookEvent.postback);
@@ -92,6 +93,113 @@ app.post('/webhook', (req, res) => {
     res.sendStatus(404);
   }
 });
+
+// BEGINNING OF WORKING AREA
+// This is the area for us to work in
+
+
+// API request to facebook for the users profile information
+// first and last names and profile pic
+async function getProfileInfoAPI(sender_psid) {
+  const config = {
+      withCredentials: true,
+      crossdomain: true,
+      method: 'get',
+      url: "https://graph.facebook.com/"+sender_psid+"?fields=first_name,last_name,profile_pic&access_token="+PAGE_ACCESS_TOKEN,
+      headers: { },
+  };
+  try {
+      const res = await axios(config);
+      let data = res.data;
+      let profile = {
+          "firstName": data['first_name'],
+          "lastName": data.last_name,
+          "profilePic": data.profile_pic,
+      };
+      return profile;
+  } catch (error) {
+      console.log(error)
+  }
+}
+
+
+// NLP Section
+
+// Handles responses to NLP Traits
+function handleTrait(firstName, traitName) {
+
+  switch (traitName) {
+      case "wit$greetings":
+          return {
+              "text": `Well hello to you too, ${firstName}! How can I help you?`
+          };
+      case "wit$bye":
+          return {
+              "text": `Goodbye, ${firstName}!`
+          };
+      case "wit$thanks":
+          return {
+              "text": `You're most welcome, ${firstName}!`
+          };
+      default:
+          return {
+              "text": `You just sent a message, ${firstName}`
+          };
+  }
+}
+
+
+// Determines Intent and returns object with intent and notable entities
+function determineIntent(intents, entities) {
+  let primaryIntent, confidence, ents = [], x, y, z;
+  // check the entites and use the one with the higher confidence
+  for (x in intents) {
+      if (primaryIntent != undefined) {
+          if (intents[x].confidence > confidence) {
+              primaryIntent = intents[x].name;
+              confidence = intents[x].confidence;
+          }
+      } else {
+          primaryIntent = intents[x].name;
+          confidence = intents[x].confidence;
+      }
+  }
+  for (y in entities) {
+      for (z in entities[y]) {
+          if (entities[y][z]['confidence'] > 0.5) {
+              ents.push(entities[y][z])
+          }
+      }
+  }
+  let data = {
+      intent: primaryIntent,
+      confidence: confidence,
+      entities: ents 
+  }
+  console.log(data)
+  return data
+}
+
+
+async function handleIntent(intent) {
+  console.log(intent.intent)
+  switch (intent.intent) {
+      case "find_restaurant":
+          break;
+      case "top_rated_business":
+          break;
+      case "stock_price":
+          break;
+      default:
+          return {
+              "text": `my apologies. that intent isn't yet supported`
+          }
+  }
+}
+
+
+
+// END OF WORKING AREA
 
 // Handles messages events
 function handleMessage(senderPsid, receivedMessage) {
