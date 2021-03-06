@@ -184,16 +184,22 @@ function determineIntent(intents, entities) {
 async function handleIntent(intent) {
   console.log(intent.intent)
   switch (intent.intent) {
-      case "find_restaurant":
-          break;
-      case "top_rated_business":
-          break;
-      case "stock_price":
-          break;
-      default:
-          return {
-              "text": `my apologies. that intent isn't yet supported`
-          }
+    case "learn_about_auction_block":
+      return {
+        "text": `Looks like you would like to learn about Auction Block`
+      }
+    case "create_new_auction_block":
+      return {
+        "text": `Create a new Auction`
+      }
+    case "participate_in_auction":
+      return {
+        "text": `Which auction would you like to participate in?`
+      }
+    default:
+      return {
+          "text": `my apologies. that intent isn't yet supported`
+      }
   }
 }
 
@@ -205,8 +211,21 @@ async function handleIntent(intent) {
 function handleMessage(senderPsid, receivedMessage) {
   let response;
 
-  // Checks if the message contains text
-  if (receivedMessage.text) {
+  const profile = await getProfileInfoAPI(senderPsid);
+
+  if (receivedMessage.nlp) {
+    const intents = receivedMessage.nlp.intents;
+    const entities = receivedMessage.nlp.entities;
+    const traits = receivedMessage.nlp.traits;
+    const nlpInfo = determineIntent(intents, entities);
+
+    response = await handleIntent(nlpInfo)
+
+    console.log(JSON.stringify(nlpInfo));
+
+    callSendAPI(senderPsid, response);
+    return;
+  } else if (receivedMessage.text) { // Checks if the message contains text but does not contain NLP
     // Create the payload for a basic text message, which
     // will be added to the body of your request to the Send API
     response = {
