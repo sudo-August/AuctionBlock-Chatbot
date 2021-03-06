@@ -1,20 +1,9 @@
 /**
- * Copyright 2021-present, Facebook, Inc. All rights reserved.
+ * AuctionBlock
  *
- * This source code is licensed under the license found in the
- * LICENSE file in the root directory of this source tree.
+ * 
+ * 
  *
- * Messenger Platform Quick Start Tutorial
- *
- * This is the completed code for the Messenger Platform quick start tutorial
- *
- * https://developers.facebook.com/docs/messenger-platform/getting-started/quick-start/
- *
- * To run this code, you must do the following:
- *
- * 1. Deploy this code to a server running Node.js
- * 2. Run `yarn install`
- * 3. Add your VERIFY_TOKEN and PAGE_ACCESS_TOKEN to your environment vars
  */
 
 'use strict';
