@@ -208,7 +208,7 @@ async function handleIntent(intent) {
 // END OF WORKING AREA
 
 // Handles messages events
-function handleMessage(senderPsid, receivedMessage) {
+async function handleMessage(senderPsid, receivedMessage) {
   let response;
 
   const profile = await getProfileInfoAPI(senderPsid);
