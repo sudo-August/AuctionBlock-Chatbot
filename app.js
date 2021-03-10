@@ -16,10 +16,8 @@ const
   request = require('request'),
   express = require('express'),
   { urlencoded, json } = require('body-parser'),
-  AWS = require('asw-sdk'),
+  { DynamoDBClient, ListTablesCommand } = require("@aws-sdk/client-dynamodb"),
   app = express();
-
-const dynamodb = new AWS.DynamoDB();
 
 // The page access token we have generated in your app settings
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
@@ -212,8 +210,17 @@ async function handleIntent(intent) {
 
 //    MARK - Database Area
 
-// Create database table
-
+// List database table
+async function listDbTables() {
+  const client = new DynamoDBClient({ region: "us-west-2" });
+  const command = new ListTablesCommand({});
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
 
 
 // END OF WORKING AREA
@@ -241,6 +248,11 @@ async function handleMessage(senderPsid, receivedMessage) {
       response = {
         'text': `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`
       };
+    }
+    if (receivedMessage.text == "who am i??") {
+      response = {
+        'text': `why, you're ${senderPsid}, doncha know`
+      }
     }
   } else if (receivedMessage.attachments) {
 
