@@ -249,10 +249,19 @@ async function handleMessage(senderPsid, receivedMessage) {
         'text': `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`
       };
     }
-    if (receivedMessage.text == "who am i??") {
-      response = {
-        'text': `why, you're ${senderPsid}, doncha know`
-      }
+    // overrides for special commands
+    switch (receivedMessage.text) {
+      case 'who am i??':
+        response = {
+          'text': `why, you're ${senderPsid}, doncha know`
+        }
+      case 'show me the tables':
+        listDbTables();
+        response = {
+          'text': 'now, you must know where to look...'
+        }
+      default:
+        break;
     }
   } else if (receivedMessage.attachments) {
 
