@@ -16,7 +16,10 @@ const
   request = require('request'),
   express = require('express'),
   { urlencoded, json } = require('body-parser'),
+  AWS = require('asw-sdk'),
   app = express();
+
+const dynamodb = new AWS.DynamoDB();
 
 // The page access token we have generated in your app settings
 const PAGE_ACCESS_TOKEN = process.env.PAGE_ACCESS_TOKEN;
@@ -207,6 +210,11 @@ async function handleIntent(intent) {
 }
 
 
+//    MARK - Database Area
+
+// Create database table
+
+
 
 // END OF WORKING AREA
 
@@ -227,8 +235,6 @@ async function handleMessage(senderPsid, receivedMessage) {
       response = await handleIntent(nlpInfo)
   
       console.log(JSON.stringify(nlpInfo));
-  
-      callSendAPI(senderPsid, response);
     } else {
       // Create the payload for a basic text message, which
       // will be added to the body of your request to the Send API
