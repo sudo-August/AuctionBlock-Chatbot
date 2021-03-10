@@ -14,6 +14,7 @@ require('dotenv').config();
 // Imports dependencies and set up http server
 const
   request = require('request'),
+  axios = require('axios'),
   express = require('express'),
   { urlencoded, json } = require('body-parser'),
   { DynamoDBClient, ListTablesCommand } = require("@aws-sdk/client-dynamodb"),
@@ -255,11 +256,13 @@ async function handleMessage(senderPsid, receivedMessage) {
         response = {
           'text': `why, you're ${senderPsid}, doncha know`
         }
+        break;
       case 'show me the tables':
         listDbTables();
         response = {
           'text': 'now, you must know where to look...'
         }
+        break;
       default:
         break;
     }
