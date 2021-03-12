@@ -17,7 +17,7 @@ const
   axios = require('axios'),
   express = require('express'),
   { urlencoded, json } = require('body-parser'),
-  { DynamoDBClient, ListTablesCommand } = require("@aws-sdk/client-dynamodb"),
+  { DynamoDBClient, ListTablesCommand, CreateTableCommand, PutItemCommand, QueryCommand, UpdateItemCommand } = require("@aws-sdk/client-dynamodb"),
   app = express();
 
 // The page access token we have generated in your app settings
@@ -28,6 +28,9 @@ app.use(urlencoded({ extended: true }));
 
 // Parse application/json
 app.use(json());
+
+// Database client
+const client = new DynamoDBClient({ region: "us-west-2"})
 
 // Respond with 'Hello World' when a GET request is made to the homepage
 app.get('/', function (_req, res) {
@@ -99,7 +102,7 @@ app.post('/webhook', (req, res) => {
   }
 });
 
-// BEGINNING OF WORKING AREA
+// BEGINNING OF WORKING AREA  ==============================================================================
 // This is the area for us to work in
 
 
@@ -213,7 +216,6 @@ async function handleIntent(intent) {
 
 // List database table
 async function listDbTables() {
-  const client = new DynamoDBClient({ region: "us-west-2" });
   const command = new ListTablesCommand({});
   try {
     const results = await client.send(command);
@@ -223,8 +225,95 @@ async function listDbTables() {
   }
 }
 
+// function to check if user is already in added to table TulipAuctionUsers
+async function checkUserStatus(senderPsid) {
+  const command = new QueryCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
 
-// END OF WORKING AREA
+// function to add new user to table TulipAuctionUsers
+async function addUser(senderPsid) {
+  const command = new PutItemCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// function to check if auction has already been created in table TulipAuctions
+async function checkAuctionStatus(senderPsid) {
+  const command = new QueryCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// function to add new item (auction) to table TulipAuctions
+async function addNewAuction(senderPsid) {
+  const command = new PutItemCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// function to update an item in table TulipAuctions once the auction has been completed
+async function updateAuctionItem(senderPsid) {
+  const command = new UpdateItemCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// function to check if user conversation table has been created with the name of the table as the user's PSID
+async function checkConversationStatus(senderPsid) {
+  const command = new QueryCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// function to get users last 3 messages
+async function getLastThreeMessages(senderPsid) {
+  const command = new QueryCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// function to add the users most recent message to his table
+async function addMostRecentMessage(senderPsid) {
+  const command = new PutItemCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results.TableNames.join("\n"));
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// END OF WORKING AREA ==================================================================================
 
 // Handles messages events
 async function handleMessage(senderPsid, receivedMessage) {
