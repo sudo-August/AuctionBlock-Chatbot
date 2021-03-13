@@ -1,17 +1,20 @@
 pragma solidity ^0.5.0;
 
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/token/ERC721/ERC721.sol"
+
 //As a starting point, using the auction contract from the solidity docs:
 //https://docs.soliditylang.org/en/v0.5.10/solidity-by-example.html?highlight=auction#id2
 //this is the OPEN AUCTION
 
 
-contract AuctionBlock {
+contract AuctionBlock is ERC721 {
     // Parameters of the auction. Times are either
     // absolute unix timestamps (seconds since 1970-01-01)
     // or time periods in seconds.
     address payable public beneficiary;
     uint public auctionStartTime;
     uint public auctionEndTime;
+    address public auctionItem;
 
     // Current state of the auction.
     address public highestBidder;
@@ -33,7 +36,7 @@ contract AuctionBlock {
     // It will be shown when the user is asked to
     // confirm a transaction.
 
-    /// Create a simple auction with `_duration`
+    /// Create a simple auction for `_auctionItem` with `_duration`
     /// seconds that the auction is open from the
     /// `_auctionStartTime` on behalf of the
     /// beneficiary address `_beneficiary` that 
@@ -43,12 +46,14 @@ contract AuctionBlock {
         uint _duration,
         uint _auctionStartTime,
         address payable _beneficiary,
-        uint _startingBid
+        uint _startingBid,
+        uint _auctionItem
     ) public {
         beneficiary = _beneficiary;
         auctionStartTime = _auctionStartTime;
         auctionEndTime = auctionStartTime + _duration;
         highestBid = _startingBid;
+        auctionItem = _auctionItem;
     }
 
     /// Bid on the auction with the value sent
@@ -136,9 +141,10 @@ contract AuctionBlock {
 
         // 2. Effects
         ended = true;
-        emit AuctionEnded(highestBidder, highestBid);
+        emit AuctionEnded(highestBidder, highestBid, auctionItem);
 
         // 3. Interaction
         beneficiary.transfer(highestBid);
+        beneficiary.safeTransferFrom(beneficiary, highestBidder, auctionItem);
     }
 }
