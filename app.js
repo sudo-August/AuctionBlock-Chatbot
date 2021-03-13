@@ -200,7 +200,7 @@ async function handleIntent(intent) {
   switch (intent.intent) {
     case "learn_about_auction_block":
       return {
-        "text": `Looks like you would like to learn about Auction Block. Read our information page -> https://github.com/sudo-August/AuctionBlock-Chatbot/blob/master/About_AuctionBlock.txt`
+        "text": `Looks like you would like to learn about Auction Block. Read our information page -> https://laanu.github.io/AuctionBlockBot.github.io`
       }
     case "create_new_auction_block":
       return {
@@ -217,9 +217,22 @@ async function handleIntent(intent) {
   }
 }
 
+//    MARK - Web3 Area
+// ==================================================
+// get ballance
+async function getBalance(address) {
+  try {
+    const balance = await web3.eth.getBalance(address);
+    return balance;
+  } catch (err) {
+    console.log("error getting balance")
+    console.log(err)
+  }
+}
+
 
 //    MARK - Database Area
-
+// ===================================================
 // List database table
 async function listDbTables() {
   const command = new ListTablesCommand({});
