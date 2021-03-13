@@ -213,7 +213,7 @@ async function handleIntent(intent, message) {
     case "place_bid":
       let bid;
       for (let x in intent.entities) {
-        if (intent.entities[x].name == "number") {
+        if (intent.entities[x].name == "wit$number") {
           bid = intent.entities[x].body
         }
       }
