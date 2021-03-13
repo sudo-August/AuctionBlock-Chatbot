@@ -426,7 +426,7 @@ async function handleMessage(senderPsid, receivedMessage) {
         };
       }
     } else {
-      command = determineCommand(receivedMessage.text)
+      const command = determineCommand(receivedMessage.text)
       if (command.length == 5) {
         response = {
           "text": "auction created"
