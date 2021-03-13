@@ -17,6 +17,7 @@ const
   axios = require('axios'),
   express = require('express'),
   { urlencoded, json } = require('body-parser'),
+  Web3 = require("web3"),
   { DynamoDBClient, ListTablesCommand, CreateTableCommand, PutItemCommand, QueryCommand, UpdateItemCommand } = require("@aws-sdk/client-dynamodb"),
   app = express();
 
@@ -30,7 +31,12 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 
 // Database client
-const client = new DynamoDBClient({ region: "us-west-2"})
+const client = new DynamoDBClient({ region: "us-west-2"});
+
+let web3 = new Web3(
+  // Replace YOUR-PROJECT-ID with a Project ID from your Infura Dashboard
+  new Web3.providers.WebsocketProvider("wss://kovan.infura.io/ws/v3/008d539220af47fd8211616b78e427c2")
+);
 
 // Respond with 'Hello World' when a GET request is made to the homepage
 app.get('/', function (_req, res) {
@@ -194,7 +200,7 @@ async function handleIntent(intent) {
   switch (intent.intent) {
     case "learn_about_auction_block":
       return {
-        "text": `Looks like you would like to learn about Auction Block`
+        "text": `Looks like you would like to learn about Auction Block. Read our information page -> https://github.com/sudo-August/AuctionBlock-Chatbot/blob/master/About_AuctionBlock.txt`
       }
     case "create_new_auction_block":
       return {
