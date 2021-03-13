@@ -6,15 +6,11 @@ import "./TulipAuction.sol";
 
 contract TulipMarket is ERC721Full, Ownable {
 
-    uint auctionStartTime;
-    uint duration;
-    uint startingBid;
+    //uint public auctionStartTime;
+    //uint public duration;
+    //uint public startingBid;
 
-    constructor(_auctionStartTime, _duration, _startingBid) ERC721Full(_name, _symbol) public {
-        auctionStartTime = _auctionStartTime;
-        duration = _duration;
-        startingBid = _startingBid;
-    }
+    constructor() ERC721Full("TulipCoin", "TLC") public {}
 
     using Counters for Counters.Counter;
 
@@ -29,16 +25,16 @@ contract TulipMarket is ERC721Full, Ownable {
         _;
     }
 
-    function createAuction(uint token_id) public onlyOwner {
+    function createAuction(uint token_id, uint auctionStartTime, uint duration, uint startingBid) public onlyOwner {
         auctions[token_id] = new TulipAuction(foundation_address, auctionStartTime, duration, startingBid);
     }
 
-    function registerNft(string memory uri) public payable onlyOwner {
+    function registerNft(string memory uri, uint auctionStartTime, uint duration, uint startingBid) public payable onlyOwner {
         token_ids.increment();
         uint token_id = token_ids.current();
         _mint(foundation_address, token_id);
         _setTokenURI(token_id, uri);
-        createAuction(token_id);
+        createAuction(token_id, auctionStartTime, duration, startingBid);
     }
 
     function endAuction(uint token_id) public onlyOwner nftRegistered(token_id) {
