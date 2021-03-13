@@ -1,17 +1,13 @@
-pragma solidity ^0.5.0;
+pragma solidity >=0.4.22 <0.6.0;
 
-//As a starting point, using the auction contract from the solidity docs:
-//https://docs.soliditylang.org/en/v0.5.10/solidity-by-example.html?highlight=auction#id2
-//this is the OPEN AUCTION
-
-
-contract AuctionBlock {
-    // Parameters of the auction. Times are either
-    // absolute unix timestamps (seconds since 1970-01-01)
-    // or time periods in seconds.
+contract TulipAuction {
+    address deployer;
     address payable public beneficiary;
-    uint public auctionStartTime;
-    uint public auctionEndTime;
+
+    // Auction parameters
+    uint auctionStartTime;
+    uint duration;
+    uint auctionEndTime = auctionStartTime + duration;
 
     // Current state of the auction.
     address public highestBidder;
@@ -22,7 +18,7 @@ contract AuctionBlock {
 
     // Set to true at the end, disallows any change.
     // By default initialized to `false`.
-    bool ended;
+    bool public ended;
 
     // Events that will be emitted on changes.
     event HighestBidIncreased(address bidder, uint amount);
@@ -33,55 +29,35 @@ contract AuctionBlock {
     // It will be shown when the user is asked to
     // confirm a transaction.
 
-    /// Create a simple auction with `_duration`
-    /// seconds that the auction is open from the
-    /// `_auctionStartTime` on behalf of the
-    /// beneficiary address `_beneficiary` that 
-    /// starts at the `_startingBid` and requires
-    /// a certain amount of `_reputation`.
+    /// Create a simple auction with `_biddingTime`
+    /// seconds bidding time on behalf of the
+    /// beneficiary address `_beneficiary`.
     constructor(
-        uint _duration,
-        uint _auctionStartTime,
         address payable _beneficiary,
+        uint _auctionStartTime,
+        uint _duration,
         uint _startingBid
     ) public {
+        deployer = msg.sender; // set as the TulipMarket
         beneficiary = _beneficiary;
         auctionStartTime = _auctionStartTime;
-        auctionEndTime = auctionStartTime + _duration;
         highestBid = _startingBid;
+        duration = _duration;
     }
 
     /// Bid on the auction with the value sent
     /// together with this transaction.
     /// The value will only be refunded if the
     /// auction is not won.
-    function bid() public payable {
-        // No arguments are necessary, all
-        // information is already part of
-        // the transaction. The keyword payable
-        // is required for the function to
-        // be able to receive Ether.
-
-        //Revert the call if the bidding 
-        //period hasn't started yet
-        require(
-            now >= auctionStartTime,
-            "Auction has not yet begun."
-        );
-
-        // Revert the call if the bidding
-        // period is over.
-        require(
-            now <= auctionEndTime,
-            "Auction already ended."
-        );
-
+    function bid(address payable sender) public payable {
         // If the bid is not higher, send the
         // money back.
         require(
             msg.value > highestBid,
             "There already is a higher bid."
         );
+
+        require(!ended, "auctionEnd has already been called.");
 
         if (highestBid != 0) {
             // Sending back the money by simply using
@@ -91,16 +67,16 @@ contract AuctionBlock {
             // withdraw their money themselves.
             pendingReturns[highestBidder] += highestBid;
         }
-        highestBidder = msg.sender;
+        highestBidder = sender;
         highestBid = msg.value;
-        emit HighestBidIncreased(msg.sender, msg.value);
+        emit HighestBidIncreased(sender, msg.value);
     }
 
     /// Withdraw a bid that was overbid.
     function withdraw() public returns (bool) {
         uint amount = pendingReturns[msg.sender];
         if (amount > 0) {
-            // It is important to set this to zero FIRST because the recipient
+            // It is important to set this to zero because the recipient
             // can call this function again as part of the receiving call
             // before `send` returns.
             pendingReturns[msg.sender] = 0;
@@ -112,6 +88,10 @@ contract AuctionBlock {
             }
         }
         return true;
+    }
+
+    function pendingReturn(address sender) public view returns (uint) {
+        return pendingReturns[sender];
     }
 
     /// End the auction and send the highest bid
@@ -131,8 +111,10 @@ contract AuctionBlock {
         // external contracts.
 
         // 1. Conditions
-        require(now >= auctionEndTime, "Auction not yet ended.");
         require(!ended, "auctionEnd has already been called.");
+        require(msg.sender == deployer, "You are not the auction deployer!");
+        require(auctionEndTime >= now, "Auction is not yet over!");
+        require(auctionStartTime <= now, "Auction has not yet begun!");
 
         // 2. Effects
         ended = true;
