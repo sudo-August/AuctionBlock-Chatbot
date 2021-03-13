@@ -211,9 +211,20 @@ async function handleIntent(intent, message) {
         "text": `Which auction would you like to participate in?`
       }
     case "place_bid":
-      console.log(intent.entities)
-      return {
-        "text": `you bid ${message}`
+      let bid;
+      for (let x in intent.entities) {
+        if (intent.entities[x].name == "number") {
+          bid = intent.entities[x].body
+        }
+      }
+      if (bid != undefined) {
+        return {
+          "text": `you bid ${bid}`
+        }
+      } else {
+        return {
+          "text": `sorry, I didn't catch a number there`
+        }
       }
     case "get_balance":
       return {
