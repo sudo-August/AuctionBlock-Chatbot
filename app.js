@@ -279,13 +279,22 @@ async function handleIntent(intent, message) {
 async function getBalance(address) {
   try {
     let balance = await web3.eth.getBalance(address);
-    balance = parseFloat(balance) / 1000000000000000000
-    return toString(balance);
+    //balance = parseFloat(balance) / 1000000000000000000
+    return balance;
   } catch (err) {
     console.log("error getting balance")
     console.log(err)
   }
 }
+
+// async function createAuctionContract(startTime, duration, address, startingBid, url) {
+//   try {
+//     let newAuctionContract = await web3.
+//   } catch (err) {
+//     console.log("error creating contract")
+//     console.log(err)
+//   }
+// }
 
 
 //    MARK - Database Area
