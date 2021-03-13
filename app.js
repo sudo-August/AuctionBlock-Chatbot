@@ -124,6 +124,17 @@ function findAddress(message) {
   return false;
 }
 
+// splits string by semi-colons
+function determineCommand(message) {
+  const strs = message.split(";")
+  if (strs.length == 5) {
+    return strs;
+  } else if (strs.length == 2) {
+    return strs;
+  } else {
+    return false;
+  }
+}
 
 // API request to facebook for the users profile information
 // first and last names and profile pic
@@ -386,21 +397,27 @@ async function handleMessage(senderPsid, receivedMessage) {
 
   // Checks if the message contains text 
   if (receivedMessage.text) { 
-    if (receivedMessage.nlp) {
-      const intents = receivedMessage.nlp.intents;
-      const entities = receivedMessage.nlp.entities;
-      const traits = receivedMessage.nlp.traits;
-      const nlpInfo = determineIntent(intents, entities);
-  
-      response = await handleIntent(nlpInfo, JSON.stringify(receivedMessage.text))
-  
-      console.log(JSON.stringify(nlpInfo));
+    if (!determineCommand(receivedMessage.text)) {
+      if (receivedMessage.nlp) {
+        const intents = receivedMessage.nlp.intents;
+        const entities = receivedMessage.nlp.entities;
+        const traits = receivedMessage.nlp.traits;
+        const nlpInfo = determineIntent(intents, entities);
+    
+        response = await handleIntent(nlpInfo, JSON.stringify(receivedMessage.text))
+    
+        console.log(JSON.stringify(nlpInfo));
+      } else {
+        // Create the payload for a basic text message, which
+        // will be added to the body of your request to the Send API
+        response = {
+          'text': `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`
+        };
+      }
     } else {
-      // Create the payload for a basic text message, which
-      // will be added to the body of your request to the Send API
       response = {
-        'text': `You sent the message: '${receivedMessage.text}'. Now send me an attachment!`
-      };
+        "text": "somehow, we're here"
+      }
     }
     // overrides for special commands
     switch (receivedMessage.text) {
