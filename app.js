@@ -211,8 +211,9 @@ async function handleIntent(intent, message) {
         "text": `Which auction would you like to participate in?`
       }
     case "place_bid":
+      console.log(intent.entities)
       return {
-        "text": `you bid ${toString(message)} ${toString(intent.entities)}`
+        "text": `you bid ${message}`
       }
     case "get_balance":
       return {
@@ -360,7 +361,7 @@ async function handleMessage(senderPsid, receivedMessage) {
       const traits = receivedMessage.nlp.traits;
       const nlpInfo = determineIntent(intents, entities);
   
-      response = await handleIntent(nlpInfo, receivedMessage.text)
+      response = await handleIntent(nlpInfo, JSON.stringify(receivedMessage.text))
   
       console.log(JSON.stringify(nlpInfo));
     } else {
