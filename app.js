@@ -31,7 +31,12 @@ app.use(urlencoded({ extended: true }));
 app.use(json());
 
 // Database client
-const client = new DynamoDBClient({ region: "us-west-2"})
+const client = new DynamoDBClient({ region: "us-west-2"});
+
+let web3 = new Web3(
+  // Replace YOUR-PROJECT-ID with a Project ID from your Infura Dashboard
+  new Web3.providers.WebsocketProvider("wss://kovan.infura.io/ws/v3/008d539220af47fd8211616b78e427c2")
+);
 
 // Respond with 'Hello World' when a GET request is made to the homepage
 app.get('/', function (_req, res) {
