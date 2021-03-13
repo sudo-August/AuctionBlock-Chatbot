@@ -6,7 +6,15 @@ import "./TulipAuction.sol";
 
 contract TulipMarket is ERC721Full, Ownable {
 
-    constructor() ERC721Full(_name, _symbol) public {}
+    uint auctionStartTime;
+    uint duration;
+    uint startingBid;
+
+    constructor(_auctionStartTime, _duration, _startingBid) ERC721Full(_name, _symbol) public {
+        auctionStartTime = _auctionStartTime;
+        duration = _duration;
+        startingBid = _startingBid;
+    }
 
     using Counters for Counters.Counter;
 
@@ -22,10 +30,10 @@ contract TulipMarket is ERC721Full, Ownable {
     }
 
     function createAuction(uint token_id) public onlyOwner {
-        auctions[token_id] = new TulipAuction(foundation_address);
+        auctions[token_id] = new TulipAuction(foundation_address, auctionStartTime, duration, startingBid);
     }
 
-    function registernft(string memory uri) public payable onlyOwner {
+    function registerNft(string memory uri) public payable onlyOwner {
         token_ids.increment();
         uint token_id = token_ids.current();
         _mint(foundation_address, token_id);
