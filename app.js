@@ -210,6 +210,14 @@ async function handleIntent(intent) {
       return {
         "text": `Which auction would you like to participate in?`
       }
+    case "get_balance":
+      return {
+        "text": `let's get your balance!`
+      }
+    case "get_auction_details":
+      return {
+        "text": `yay! auction details!`
+      }
     default:
       return {
           "text": `my apologies. that intent isn't yet supported`
