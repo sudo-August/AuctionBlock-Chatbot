@@ -165,9 +165,9 @@ function handleTrait(firstName, traitName) {
 
 // Determines Intent and returns object with intent and notable entities
 function determineIntent(intents, entities) {
-  let primaryIntent, confidence, ents = [], x, y, z;
+  let primaryIntent, confidence, ents = [];
   // check the entites and use the one with the higher confidence
-  for (x in intents) {
+  for (let x in intents) {
       if (primaryIntent != undefined) {
           if (intents[x].confidence > confidence) {
               primaryIntent = intents[x].name;
@@ -178,8 +178,8 @@ function determineIntent(intents, entities) {
           confidence = intents[x].confidence;
       }
   }
-  for (y in entities) {
-      for (z in entities[y]) {
+  for (let y in entities) {
+      for (let z in entities[y]) {
           if (entities[y][z]['confidence'] > 0.5) {
               ents.push(entities[y][z])
           }
@@ -195,7 +195,7 @@ function determineIntent(intents, entities) {
 }
 
 
-async function handleIntent(intent) {
+async function handleIntent(intent, message) {
   console.log(intent.intent)
   switch (intent.intent) {
     case "learn_about_auction_block":
@@ -209,6 +209,10 @@ async function handleIntent(intent) {
     case "participate_in_auction":
       return {
         "text": `Which auction would you like to participate in?`
+      }
+    case "place_bid":
+      return {
+        "text": `you bid ${message} ${intent.entities}`
       }
     case "get_balance":
       return {
@@ -356,7 +360,7 @@ async function handleMessage(senderPsid, receivedMessage) {
       const traits = receivedMessage.nlp.traits;
       const nlpInfo = determineIntent(intents, entities);
   
-      response = await handleIntent(nlpInfo)
+      response = await handleIntent(nlpInfo, receivedMessage.text)
   
       console.log(JSON.stringify(nlpInfo));
     } else {
