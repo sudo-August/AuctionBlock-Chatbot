@@ -439,7 +439,7 @@ async function handleMessage(senderPsid, receivedMessage) {
       const command = determineCommand(receivedMessage.text)
       if (command.length == 5) {
         response = {
-          "text": "auction created"
+          "text": "auction created at 0x86056a7119c1a14c33297b32e7f783351ef407bdd108b1e739907dafcd434147"
         }
       } else if (command.length == 2) {
         response = {
