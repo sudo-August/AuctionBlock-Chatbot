@@ -212,7 +212,7 @@ async function handleIntent(intent, message) {
       }
     case "place_bid":
       return {
-        "text": `you bid ${message} ${intent.entities}`
+        "text": `you bid ${toString(message)} ${toString(intent.entities)}`
       }
     case "get_balance":
       return {
