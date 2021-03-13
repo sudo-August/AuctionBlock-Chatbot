@@ -63,4 +63,9 @@ contract TulipMarket is ERC721Full, Ownable {
         auction.bid.value(msg.value)(msg.sender);
     }
 
+    function withdraw(uint token_id, address payable sender) public payable nftRegistered(token_id) {
+        TulipAuction auction = auctions[token_id];
+        auction.withdraw(sender);
+    }
+
 }
