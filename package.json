@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.8.0",
+    "@truffle/hdwallet-provider": "^1.2.3",
     "axios": "^0.21.1",
     "body-parser": "^1.18.3",
     "dotenv": "^6.2.0",

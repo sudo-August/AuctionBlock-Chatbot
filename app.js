@@ -111,6 +111,18 @@ app.post('/webhook', (req, res) => {
 // BEGINNING OF WORKING AREA  ==============================================================================
 // This is the area for us to work in
 
+//  HELPER FUNCTIONS
+// Finds ethereum address
+function findAddress(message) {
+  const strs = message.split(" ");
+  for (let x in strs) {
+    if (strs[x].length >= 32) {
+      return strs[x]
+    }
+  }
+  return false;
+}
+
 
 // API request to facebook for the users profile information
 // first and last names and profile pic
@@ -227,8 +239,15 @@ async function handleIntent(intent, message) {
         }
       }
     case "get_balance":
-      return {
-        "text": `let's get your balance!`
+      const address = findAddress(message);
+      if (!address) {
+        return {
+          "text": `let's get the balance but I didn't get the address.... sad`
+        }
+      } else {
+        return {
+          "text": `let's get the balance for address ${address}!`
+        }
       }
     case "get_auction_details":
       return {
