@@ -117,7 +117,8 @@ function findAddress(message) {
   const strs = message.split(" ");
   for (let x in strs) {
     if (strs[x].length >= 32) {
-      return strs[x]
+      const addr = strs[x].replace(`"`,``);
+      return addr;
     }
   }
   return false;
