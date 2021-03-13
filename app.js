@@ -228,11 +228,11 @@ async function handleIntent(intent, message) {
       }
     case "create_new_auction_block":
       return {
-        "text": `Create a new Auction`
+        "text": `If you would like to create an auction, send a message in this format: <start time>; <duration>; <your address>; <starting bid>; <address of nft>;`
       }
     case "participate_in_auction":
       return {
-        "text": `Which auction would you like to participate in?`
+        "text": `To participate in an auction, it must be currently live and you may place a bid by sending a message in this format: <address of auction>; <your bid>`
       }
     case "place_bid":
       let bid;
@@ -363,6 +363,16 @@ async function checkConversationStatus(senderPsid) {
     console.log(results.TableNames.join("\n"));
   } catch (err) {
     console.error(err);
+  }
+}
+
+async function addConversationTable(senderPsid) {
+  const command = new CreateTableCommand({})
+  try {
+    const results = await client.send(command);
+    console.log(results);
+  } catch (err) {
+    console.log(err);
   }
 }
 
