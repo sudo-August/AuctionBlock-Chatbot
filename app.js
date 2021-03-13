@@ -257,8 +257,9 @@ async function handleIntent(intent, message) {
           "text": `let's get the balance but I didn't get the address.... sad`
         }
       } else {
+        const balance = await getBalance(address)
         return {
-          "text": `let's get the balance for address ${address}!`
+          "text": `The balance on ${address} is ${balance}!`
         }
       }
     case "get_auction_details":
