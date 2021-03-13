@@ -15,8 +15,9 @@ As an NFT seller you will need to provide you address as well as the address for
 
 # Tulip Puchase?
 
-Tulip which represents reputation token either be purchased or acquired through auction participation track record. 
+Tulip which represents reputation token either be purchased or acquired through auction participant's track record. 
 
 
 
 # Auction Item 
+Template contract will be provided for participant seller. Seller will need to provide starting price, start time and auction duration. Once smart contract is completed, seller will be provided with address to the NFT item(s). 
