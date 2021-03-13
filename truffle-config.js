@@ -24,6 +24,9 @@
 // const fs = require('fs');
 // const mnemonic = fs.readFileSync(".secret").toString().trim();
 
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const mnemonic = "burden device quarter network tonight pioneer ask verb scare pet security direct"
+
 module.exports = {
   /**
    * Networks define how you connect to your ethereum client and let you set the
@@ -56,6 +59,20 @@ module.exports = {
     // from: <address>,        // Account to send txs from (default: accounts[0])
     // websocket: true        // Enable EventEmitter interface for web3 (default: false)
     // },
+    ropsten: {
+      provider: () => new HDWalletProvider(mnemonic, ``),
+      network_id: 3,
+      gas: 5500000,
+      confirmation: 2,
+      timeoutBlocks: 200,
+      skipDryRun: true 
+    },
+    kovan: {
+      provider: () => new HDWalletProvider(mnemonic, ``),
+      network_id: 42,
+      gas: 0x7a1000,
+      gasPrice: 2000000000
+    }
     // Useful for deploying to a public network.
     // NB: It's important to wrap the provider as a function.
     // ropsten: {

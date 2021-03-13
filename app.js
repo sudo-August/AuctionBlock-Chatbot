@@ -279,7 +279,7 @@ async function handleIntent(intent, message) {
 async function getBalance(address) {
   try {
     const balance = await web3.eth.getBalance(address);
-    return balance;
+    return parseFloat(balance);
   } catch (err) {
     console.log("error getting balance")
     console.log(err)
