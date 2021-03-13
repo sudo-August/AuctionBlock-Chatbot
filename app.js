@@ -426,8 +426,19 @@ async function handleMessage(senderPsid, receivedMessage) {
         };
       }
     } else {
-      response = {
-        "text": "somehow, we're here"
+      command = determineCommand(receivedMessage.text)
+      if (command.length == 5) {
+        response = {
+          "text": "auction created"
+        }
+      } else if (command.length == 2) {
+        response = {
+          "text": "bid accepted"
+        }
+      } else {
+        response = {
+          "text": "I'm sorry, there was an error with that command"
+        }
       }
     }
     // overrides for special commands
