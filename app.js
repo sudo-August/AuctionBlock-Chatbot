@@ -200,7 +200,7 @@ async function handleIntent(intent) {
   switch (intent.intent) {
     case "learn_about_auction_block":
       return {
-        "text": `Looks like you would like to learn about Auction Block`
+        "text": `Looks like you would like to learn about Auction Block. Read our information page -> https://github.com/sudo-August/AuctionBlock-Chatbot/blob/master/About_AuctionBlock.txt`
       }
     case "create_new_auction_block":
       return {
