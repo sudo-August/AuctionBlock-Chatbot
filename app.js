@@ -17,6 +17,7 @@ const
   axios = require('axios'),
   express = require('express'),
   { urlencoded, json } = require('body-parser'),
+  Web3 = require("web3"),
   { DynamoDBClient, ListTablesCommand, CreateTableCommand, PutItemCommand, QueryCommand, UpdateItemCommand } = require("@aws-sdk/client-dynamodb"),
   app = express();
 
