@@ -34,13 +34,14 @@ app.use(json());
 const client = new DynamoDBClient({ region: "us-west-2"});
 
 let web3 = new Web3(
-  // Replace YOUR-PROJECT-ID with a Project ID from your Infura Dashboard
   new Web3.providers.WebsocketProvider("wss://kovan.infura.io/ws/v3/008d539220af47fd8211616b78e427c2")
 );
 
+const mnemonicAug = "burden device quarter network tonight pioneer ask verb scare pet security direct"
+
 // Respond with 'Hello World' when a GET request is made to the homepage
 app.get('/', function (_req, res) {
-  res.send('Hello World');
+  res.send('this is not the droid you seek');
 });
 
 // Adds support for GET requests to our webhook
@@ -438,6 +439,8 @@ async function handleMessage(senderPsid, receivedMessage) {
     } else {
       const command = determineCommand(receivedMessage.text)
       if (command.length == 5) {
+        // commands should be of the format start time, duration, address, starting bid, IPFS link to winning item
+
         response = {
           "text": "auction created at 0x86056a7119c1a14c33297b32e7f783351ef407bdd108b1e739907dafcd434147"
         }
